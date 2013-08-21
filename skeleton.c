@@ -38,18 +38,6 @@ void pgdb_write(
 {
 }
 
-/* Returns NULL if not found.  A malloc()ed array otherwise.
-   Stores the length of the array in *vallen. */
-char* pgdb_get(
-    pgdb_t* db,
-    const pgdb_readoptions_t* options,
-    const char* key, size_t keylen,
-    size_t* vallen,
-    char** errptr)
-{
-	return NULL;
-}
-
 pgdb_iterator_t* pgdb_create_iterator(
     pgdb_t* db,
     const pgdb_readoptions_t* options)

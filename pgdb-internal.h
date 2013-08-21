@@ -9,6 +9,7 @@
 #define PGDB_SB_FN		"superblock"
 #define PGDB_SB_MAGIC		"PGDBSUPR"
 #define PGDB_ROOT_MAGIC		"PGDBROOT"
+#define PGDB_PAGE_MAGIC		"PGDBPAGE"
 
 enum {
 	PGDB_TRAIL_SZ		= 32,		// sha256
@@ -35,6 +36,30 @@ struct pgdb_map {
 	void			*mem;
 };
 
+struct pgdb_page_hdr {
+	unsigned char		magic[8];
+	uint32_t		n_entries;
+	unsigned char		reserved[20];
+};
+
+struct pgdb_page_index {
+	uint32_t		k_offset;
+	uint32_t		k_len;
+	unsigned char		k_csum[4];		// first 4 of sha256
+	uint32_t		reserved1;
+
+	uint32_t		v_offset;
+	uint32_t		v_len;
+	unsigned char		v_csum[4];		// first 4 of sha256
+	uint32_t		reserved2;
+};
+
+struct pgdb_pagefile {
+	struct pgdb_map		*map;
+	uint32_t		n_entries;
+	struct pgdb_page_index	*pi;
+};
+
 struct pgdb_table {
 	char				*name;
 	uint64_t			root_id;
@@ -57,6 +82,12 @@ extern bool pg_write_root(pgdb_t *db, PGcodec__RootIdx *root, unsigned int n,
 		   char **errptr);
 extern bool pg_read_root(pgdb_t *db, PGcodec__RootIdx **root, unsigned int n,
 		  char **errptr);
+
+extern void pg_pagefile_close(struct pgdb_pagefile *pf);
+extern struct pgdb_pagefile *pg_pagefile_open(pgdb_t *db, unsigned int n,
+					char **errptr);
+extern int pg_pagefile_find(struct pgdb_pagefile *pf, const void *key_a, size_t alen,
+		     bool exact_match);
 
 extern bool pg_have_superblock(const char *dirname);
 extern bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *sb,

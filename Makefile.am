@@ -7,9 +7,11 @@ libpgdb_a_SOURCES = \
 	pgdb.h		\
 	pgdb-internal.h \
 	destroy.c	\
+	get.c		\
 	open.c		\
 	options.c	\
 	map.c		\
+	pagefile.c	\
 	root.c		\
 	superblock.c	\
 	util.c		\
