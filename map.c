@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -59,7 +60,7 @@ struct pgdb_map *pgmap_open(const char *pathname, char **errptr)
 	return map;
 
 err_out_map:
-	map_free(map);
+	pgmap_free(map);
 err_out:
 	return NULL;
 
