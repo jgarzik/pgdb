@@ -67,7 +67,7 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 
 	// generate initial root table
 	PGcodec__TableMeta table;
-	table.name = "root";
+	table.name = "master";
 	table.uuid = tab_uuid_s;
 	table.root_id = 0;
 	PGcodec__TableMeta *tables[1] = { &table };
