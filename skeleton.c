@@ -47,17 +47,20 @@ char* pgdb_get(
     size_t* vallen,
     char** errptr)
 {
+	return NULL;
 }
 
 pgdb_iterator_t* pgdb_create_iterator(
     pgdb_t* db,
     const pgdb_readoptions_t* options)
 {
+	return NULL;
 }
 
 const pgdb_snapshot_t* pgdb_create_snapshot(
     pgdb_t* db)
 {
+	return NULL;
 }
 
 void pgdb_release_snapshot(
@@ -72,6 +75,7 @@ char* pgdb_property_value(
     pgdb_t* db,
     const char* propname)
 {
+	return NULL;
 }
 
 void pgdb_approximate_sizes(
@@ -113,6 +117,7 @@ void pgdb_iter_destroy(pgdb_iterator_t* iter)
 }
 unsigned char pgdb_iter_valid(const pgdb_iterator_t* iter)
 {
+	return 0xff;
 }
 void pgdb_iter_seek_to_first(pgdb_iterator_t* iter)
 {
@@ -131,9 +136,11 @@ void pgdb_iter_prev(pgdb_iterator_t* iter)
 }
 const char* pgdb_iter_key(const pgdb_iterator_t* iter, size_t* klen)
 {
+	return NULL;
 }
 const char* pgdb_iter_value(const pgdb_iterator_t* iter, size_t* vlen)
 {
+	return NULL;
 }
 void pgdb_iter_get_error(const pgdb_iterator_t* iter, char** errptr)
 {
@@ -143,6 +150,7 @@ void pgdb_iter_get_error(const pgdb_iterator_t* iter, char** errptr)
 
 pgdb_writebatch_t* pgdb_writebatch_create(void)
 {
+	return NULL;
 }
 void pgdb_writebatch_destroy(pgdb_writebatch_t* wb)
 {
@@ -173,6 +181,7 @@ void pgdb_writebatch_iterate(
 
 pgdb_options_t* pgdb_options_create(void)
 {
+	return NULL;
 }
 void pgdb_options_destroy(pgdb_options_t* opt)
 {
@@ -236,6 +245,7 @@ pgdb_comparator_t* pgdb_comparator_create(
         const char* b, size_t blen),
     const char* (*name)(void*))
 {
+	return NULL;
 }
 void pgdb_comparator_destroy(pgdb_comparator_t* cmp)
 {
@@ -257,6 +267,7 @@ pgdb_filterpolicy_t* pgdb_filterpolicy_create(
         const char* filter, size_t filter_length),
     const char* (*name)(void*))
 {
+	return NULL;
 }
 void pgdb_filterpolicy_destroy(pgdb_filterpolicy_t* fp)
 {
@@ -265,12 +276,14 @@ void pgdb_filterpolicy_destroy(pgdb_filterpolicy_t* fp)
 pgdb_filterpolicy_t* pgdb_filterpolicy_create_bloom(
     int bits_per_key)
 {
+	return NULL;
 }
 
 /* Read options */
 
 pgdb_readoptions_t* pgdb_readoptions_create(void)
 {
+	return NULL;
 }
 void pgdb_readoptions_destroy(pgdb_readoptions_t* ro)
 {
@@ -294,6 +307,7 @@ void pgdb_readoptions_set_snapshot(
 
 pgdb_writeoptions_t* pgdb_writeoptions_create(void)
 {
+	return NULL;
 }
 void pgdb_writeoptions_destroy(pgdb_writeoptions_t* wo)
 {
@@ -307,6 +321,7 @@ void pgdb_writeoptions_set_sync(
 
 pgdb_cache_t* pgdb_cache_create_lru(size_t capacity)
 {
+	return NULL;
 }
 void pgdb_cache_destroy(pgdb_cache_t* cache)
 {
@@ -316,6 +331,7 @@ void pgdb_cache_destroy(pgdb_cache_t* cache)
 
 pgdb_env_t* pgdb_create_default_env()
 {
+	return NULL;
 }
 void pgdb_env_destroy(pgdb_env_t* env)
 {
@@ -335,10 +351,12 @@ void pgdb_free(void* ptr)
 /* Return the major version number for this release. */
 int pgdb_major_version(void)
 {
+	return -1;
 }
 
 /* Return the minor version number for this release. */
 int pgdb_minor_version(void)
 {
+	return -1;
 }
 
