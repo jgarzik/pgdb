@@ -8,6 +8,7 @@
 
 #define PGDB_SB_FN		"superblock"
 #define PGDB_SB_MAGIC		"PGDBSUPR"
+#define PGDB_ROOT_MAGIC		"PGDBROOT"
 
 enum {
 	PGDB_TRAIL_SZ		= 32,		// sha256
@@ -41,6 +42,9 @@ struct pgdb_t {
 
 extern void pgmap_free(struct pgdb_map *map);
 extern struct pgdb_map *pgmap_open(const char *pathname, char **errptr);
+
+extern bool pg_write_root(pgdb_t *db, PGcodec__RootIdx *root, unsigned int n,
+		   char **errptr);
 
 extern bool pg_have_superblock(const char *dirname);
 extern bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *sb,

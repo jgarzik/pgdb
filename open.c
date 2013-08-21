@@ -59,13 +59,16 @@ static bool is_dir(const char *pathname, bool readonly, char **errptr)
 
 static bool pg_create_db(pgdb_t *db, char **errptr)
 {
-	// generate root table UUID
+	// generate (empty) root index, master table
+	PGcodec__RootIdx root = PGCODEC__ROOT_IDX__INIT;
+
+	// generate master table UUID
 	uuid_t tab_uuid;
 	char tab_uuid_s[128];
 	uuid_generate_random(tab_uuid);
 	uuid_unparse(tab_uuid, tab_uuid_s);
 
-	// generate initial root table
+	// generate initial master table
 	PGcodec__TableMeta table;
 	table.name = "master";
 	table.uuid = tab_uuid_s;
@@ -92,6 +95,10 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 
 	// write superblock file
 	if (!pg_write_superblock(db, &sb, errptr))
+		return false;
+
+	// write table's root index
+	if (!pg_write_root(db, &root, 0, errptr))
 		return false;
 
 	return true;

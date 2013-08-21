@@ -10,6 +10,7 @@ libpgdb_a_SOURCES = \
 	open.c		\
 	options.c	\
 	map.c		\
+	root.c		\
 	superblock.c	\
 	util.c		\
 	PGcodec.pb-c.h	\
