@@ -1,6 +1,8 @@
 #ifndef __PGDB_INTERNAL_H__
 #define __PGDB_INTERNAL_H__
 
+#include <sys/stat.h>
+#include <stdint.h>
 #include "pgdb.h"
 #include "PGcodec.pb-c.h"
 

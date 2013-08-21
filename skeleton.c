@@ -94,15 +94,6 @@ void pgdb_compact_range(
 {
 }
 
-/* Management operations */
-
-void pgdb_destroy_db(
-    const pgdb_options_t* options,
-    const char* name,
-    char** errptr)
-{
-}
-
 void pgdb_repair_db(
     const pgdb_options_t* options,
     const char* name,
