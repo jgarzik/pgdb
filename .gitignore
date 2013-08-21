@@ -15,4 +15,7 @@ missing
 stamp-h1
 install-sh
 pgdb-config.h*
+aclocal.m4
+*.o
+*.a
 
