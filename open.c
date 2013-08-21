@@ -59,21 +59,36 @@ static bool is_dir(const char *pathname, bool readonly, char **errptr)
 
 static bool pg_create_db(pgdb_t *db, char **errptr)
 {
+	// generate root table UUID
+	uuid_t tab_uuid;
+	char tab_uuid_s[128];
+	uuid_generate_random(tab_uuid);
+	uuid_unparse(tab_uuid, tab_uuid_s);
+
+	// generate initial root table
+	PGcodec__TableMeta table;
+	table.name = "root";
+	table.uuid = tab_uuid_s;
+	table.root_id = 0;
+	PGcodec__TableMeta *tables[1] = { &table };
+
+	// generate root superblock UUID
+	uuid_t sb_uuid;
+	char sb_uuid_s[128];
+	uuid_generate_random(sb_uuid);
+	uuid_unparse(sb_uuid, sb_uuid_s);
+
+	// generate initial superblock
+	PGcodec__Superblock sb = PGCODEC__SUPERBLOCK__INIT;
+	sb.uuid = sb_uuid_s;
+	sb.n_tables = 1;
+	sb.tables = tables;
+
 	// create database directory
 	if (mkdir(db->pathname, 0666) < 0) {
 		*errptr = strdup(strerror(errno));
 		return false;
 	}
-
-	// generate root UUID
-	uuid_t uuid;
-	char uuid_s[128];
-	uuid_generate_random(uuid);
-	uuid_unparse(uuid, uuid_s);
-
-	// generate template superblock
-	PGcodec__Superblock sb = PGCODEC__SUPERBLOCK__INIT;
-	sb.uuid = &uuid_s[0];
 
 	// write superblock file
 	if (!pg_write_superblock(db, &sb, errptr))
