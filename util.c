@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <dirent.h>
 #include <openssl/sha.h>
 
 #include "pgdb-internal.h"
@@ -94,5 +95,40 @@ bool pg_verify_file(char *magic, const void *file_data,
 	}
 
 	return true;
+}
+
+bool pg_iterate_dir(const char *dirname,
+		 bool (*actor)(const struct dirent *de, void *priv,
+		 	       char **errptr),
+		 void *priv, char **errptr)
+{
+	DIR *dir;
+	struct dirent *de;
+
+	*errptr = NULL;
+
+	// ideally we use O_DIRECTORY, fchdir() etc.
+
+	dir = opendir(dirname);
+	if (!dir) {
+		*errptr = strdup(strerror(errno));
+		return false;
+	}
+
+	bool arc = true;
+	while ((de = readdir(dir)) != NULL) {
+		if ((!strcmp(de->d_name, ".")) ||
+		    (!strcmp(de->d_name, "..")))
+			continue;
+
+
+		arc = actor(de, priv, errptr);
+		if (!arc)
+			break;
+	}
+
+	closedir(dir);
+
+	return arc;
 }
 

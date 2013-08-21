@@ -8,41 +8,6 @@
 
 #include "pgdb-internal.h"
 
-static bool iterate_dir(const char *dirname,
-			bool (*actor)(const struct dirent *de, void *priv, char **errptr),
-			void *priv,
-			char **errptr)
-{
-	DIR *dir;
-	struct dirent *de;
-
-	*errptr = NULL;
-
-	// ideally we use O_DIRECTORY, fchdir() etc.
-
-	dir = opendir(dirname);
-	if (!dir) {
-		*errptr = strdup(strerror(errno));
-		return false;
-	}
-
-	bool arc = true;
-	while ((de = readdir(dir)) != NULL) {
-		if ((!strcmp(de->d_name, ".")) ||
-		    (!strcmp(de->d_name, "..")))
-			continue;
-
-
-		arc = actor(de, priv, errptr);
-		if (!arc)
-			break;
-	}
-
-	closedir(dir);
-
-	return arc;
-}
-
 struct destroy_info {
 	const char	*dirname;
 };
@@ -76,7 +41,7 @@ void pgdb_destroy_db(
 
 	// remove all files in that directory
 	struct destroy_info di = { name };
-	if (!iterate_dir(name, destroy_iter, &di, errptr))
+	if (!pg_iterate_dir(name, destroy_iter, &di, errptr))
 		return;
 
 	// remove directory

@@ -6,6 +6,8 @@
 #include "pgdb.h"
 #include "PGcodec.pb-c.h"
 
+struct dirent;
+
 #define PGDB_SB_FN		"superblock"
 #define PGDB_SB_MAGIC		"PGDBSUPR"
 #define PGDB_ROOT_MAGIC		"PGDBROOT"
@@ -98,5 +100,9 @@ extern bool pg_wrap_file(int fd, char *magic, const void *data,
 	      size_t data_len, char **errptr);
 extern bool pg_verify_file(char *magic, const void *file_data,
 		unsigned long file_len, char **errptr);
+extern bool pg_iterate_dir(const char *dirname,
+		 bool (*actor)(const struct dirent *de, void *priv,
+		 	       char **errptr),
+		 void *priv, char **errptr);
 
 #endif // __PGDB_INTERNAL_H__
