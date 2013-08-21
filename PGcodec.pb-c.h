@@ -23,11 +23,12 @@ struct  _PGcodec__RootEnt
 {
   ProtobufCMessage base;
   ProtobufCBinaryData key;
+  uint32_t n_records;
   uint64_t file_id;
 };
 #define PGCODEC__ROOT_ENT__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&pgcodec__root_ent__descriptor) \
-    , {0,NULL}, 0 }
+    , {0,NULL}, 0, 0 }
 
 
 struct  _PGcodec__RootIdx

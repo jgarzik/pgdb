@@ -178,7 +178,7 @@ void   pgcodec__superblock__free_unpacked
   PROTOBUF_C_ASSERT (message->base.descriptor == &pgcodec__superblock__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor pgcodec__root_ent__field_descriptors[2] =
+static const ProtobufCFieldDescriptor pgcodec__root_ent__field_descriptors[3] =
 {
   {
     "key",
@@ -193,8 +193,20 @@ static const ProtobufCFieldDescriptor pgcodec__root_ent__field_descriptors[2] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "file_id",
+    "n_records",
     2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(PGcodec__RootEnt, n_records),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "file_id",
+    3,
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_UINT64,
     0,   /* quantifier_offset */
@@ -206,13 +218,14 @@ static const ProtobufCFieldDescriptor pgcodec__root_ent__field_descriptors[2] =
   },
 };
 static const unsigned pgcodec__root_ent__field_indices_by_name[] = {
-  1,   /* field[1] = file_id */
+  2,   /* field[2] = file_id */
   0,   /* field[0] = key */
+  1,   /* field[1] = n_records */
 };
 static const ProtobufCIntRange pgcodec__root_ent__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 0, 3 }
 };
 const ProtobufCMessageDescriptor pgcodec__root_ent__descriptor =
 {
@@ -222,7 +235,7 @@ const ProtobufCMessageDescriptor pgcodec__root_ent__descriptor =
   "PGcodec__RootEnt",
   "PGcodec",
   sizeof(PGcodec__RootEnt),
-  2,
+  3,
   pgcodec__root_ent__field_descriptors,
   pgcodec__root_ent__field_indices_by_name,
   1,  pgcodec__root_ent__number_ranges,
@@ -347,7 +360,7 @@ static const ProtobufCFieldDescriptor pgcodec__superblock__field_descriptors[2] 
   },
   {
     "tables",
-    5,
+    2,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
     PROTOBUF_C_OFFSETOF(PGcodec__Superblock, n_tables),
@@ -362,10 +375,9 @@ static const unsigned pgcodec__superblock__field_indices_by_name[] = {
   1,   /* field[1] = tables */
   0,   /* field[0] = uuid */
 };
-static const ProtobufCIntRange pgcodec__superblock__number_ranges[2 + 1] =
+static const ProtobufCIntRange pgcodec__superblock__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 5, 1 },
   { 0, 2 }
 };
 const ProtobufCMessageDescriptor pgcodec__superblock__descriptor =
@@ -379,7 +391,7 @@ const ProtobufCMessageDescriptor pgcodec__superblock__descriptor =
   2,
   pgcodec__superblock__field_descriptors,
   pgcodec__superblock__field_indices_by_name,
-  2,  pgcodec__superblock__number_ranges,
+  1,  pgcodec__superblock__number_ranges,
   (ProtobufCMessageInit) pgcodec__superblock__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
