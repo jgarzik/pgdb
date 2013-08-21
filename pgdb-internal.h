@@ -47,4 +47,9 @@ extern bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *sb,
 				char **errptr);
 extern bool pg_read_superblock(pgdb_t *db, char **errptr);
 
+extern bool pg_wrap_file(int fd, char *magic, const void *data,
+	      size_t data_len, char **errptr);
+extern bool pg_verify_file(char *magic, const void *file_data,
+		unsigned long file_len, char **errptr);
+
 #endif // __PGDB_INTERNAL_H__

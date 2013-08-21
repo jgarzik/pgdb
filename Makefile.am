@@ -11,6 +11,7 @@ libpgdb_a_SOURCES = \
 	options.c	\
 	map.c		\
 	superblock.c	\
+	util.c		\
 	PGcodec.pb-c.h	\
 	PGcodec.pb-c.c	\
 	skeleton.c
