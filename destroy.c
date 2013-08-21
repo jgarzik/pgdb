@@ -63,22 +63,13 @@ static bool destroy_iter(const struct dirent *de, void *priv, char **errptr)
 	return true;		// continue dir iteration
 }
 
-static bool have_superblock(const char *dirname)
-{
-	size_t fn_len = strlen(dirname) + strlen(PGDB_SB_FN) + 2;
-	char *fn = alloca(fn_len);
-
-	snprintf(fn, fn_len, "%s/" PGDB_SB_FN, dirname);
-	return access(fn, R_OK | W_OK) == 0;
-}
-
 void pgdb_destroy_db(
     const pgdb_options_t* options,
     const char* name,
     char** errptr)
 {
 	// quick check: does superblock exist?
-	if (!have_superblock(name)) {
+	if (!pg_have_superblock(name)) {
 		*errptr = strdup("not a pgdb database");
 		return;
 	}

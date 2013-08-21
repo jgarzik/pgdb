@@ -8,7 +8,9 @@ libpgdb_a_SOURCES = \
 	pgdb-internal.h \
 	destroy.c	\
 	open.c		\
+	options.c	\
 	map.c		\
+	superblock.c	\
 	PGcodec.pb-c.h	\
 	PGcodec.pb-c.c	\
 	skeleton.c

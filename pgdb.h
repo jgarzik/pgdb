@@ -156,9 +156,9 @@ extern void pgdb_options_set_filter_policy(
     pgdb_options_t*,
     pgdb_filterpolicy_t*);
 extern void pgdb_options_set_create_if_missing(
-    pgdb_options_t*, unsigned char);
+    pgdb_options_t*, bool);
 extern void pgdb_options_set_error_if_exists(
-    pgdb_options_t*, unsigned char);
+    pgdb_options_t*, bool);
 extern void pgdb_options_set_paranoid_checks(
     pgdb_options_t*, unsigned char);
 extern void pgdb_options_set_env(pgdb_options_t*, pgdb_env_t*);
