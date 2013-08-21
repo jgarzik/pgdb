@@ -10,7 +10,7 @@
 #include <endian.h>
 #include <sys/uio.h>
 #include <fcntl.h>
-#include <openssl/sha.h>
+#include <uuid/uuid.h>
 
 #include "pgdb-internal.h"
 
@@ -57,12 +57,58 @@ static bool is_dir(const char *pathname, bool readonly, char **errptr)
 	return true;
 }
 
+static bool pg_create_db(pgdb_t *db, char **errptr)
+{
+	// create database directory
+	if (mkdir(db->pathname, 0666) < 0) {
+		*errptr = strdup(strerror(errno));
+		return false;
+	}
+
+	// generate root UUID
+	uuid_t uuid;
+	char uuid_s[128];
+	uuid_generate_random(uuid);
+	uuid_unparse(uuid, uuid_s);
+
+	// generate template superblock
+	PGcodec__Superblock sb = PGCODEC__SUPERBLOCK__INIT;
+	sb.uuid = &uuid_s[0];
+
+	// write superblock file
+	if (!pg_write_superblock(db, &sb, errptr))
+		return false;
+
+	return true;
+}
+
 pgdb_t* pgdb_open(
     const pgdb_options_t* options,
     const char* name,
     char** errptr)
 {
-	if (!is_dir(name, options->readonly, errptr))
+	bool have_dir = access(name, F_OK) == 0;
+
+	if (have_dir && options->error_if_exists) {
+		*errptr = strdup("database already exists");
+		return NULL;
+	}
+
+	bool create = false;
+	if (!have_dir) {
+		if (!options->create_missing) {
+			*errptr = strdup("database missing");
+			return NULL;
+		} else
+			create = true;
+	}
+
+	if (create && options->readonly) {
+		*errptr = strdup("cannot create RO database");
+		return NULL;
+	}
+
+	if (!create && !is_dir(name, options->readonly, errptr))
 		return NULL;
 
 	pgdb_t *db = calloc(1, sizeof(*db));
@@ -76,6 +122,9 @@ pgdb_t* pgdb_open(
 		*errptr = strdup("OOM");	// irony, but recoverable
 		goto err_out;
 	}
+
+	if (create && !pg_create_db(db, errptr))
+		goto err_out;
 
 	if (!pg_read_superblock(db, errptr))
 		goto err_out;

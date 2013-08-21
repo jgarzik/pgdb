@@ -43,7 +43,8 @@ extern void pgmap_free(struct pgdb_map *map);
 extern struct pgdb_map *pgmap_open(const char *pathname, char **errptr);
 
 extern bool pg_have_superblock(const char *dirname);
-extern bool pg_write_superblock(pgdb_t *db, char **errptr);
+extern bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *sb,
+				char **errptr);
 extern bool pg_read_superblock(pgdb_t *db, char **errptr);
 
 #endif // __PGDB_INTERNAL_H__

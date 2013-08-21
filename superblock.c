@@ -63,7 +63,8 @@ static bool wrap_file(int fd, char *magic, const void *data,
 	return true;
 }
 
-bool pg_write_superblock(pgdb_t *db, char **errptr)
+bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *superblock,
+			 char **errptr)
 {
 	// build pathnames
 	size_t fn_len = strlen(db->pathname) + strlen(PGDB_SB_FN) + 4 + 2;
@@ -75,13 +76,13 @@ bool pg_write_superblock(pgdb_t *db, char **errptr)
 	bool rc = false;
 
 	// serialize superblock
-	size_t plen = pgcodec__superblock__get_packed_size(db->superblock);
+	size_t plen = pgcodec__superblock__get_packed_size(superblock);
 	void *pbuf = malloc(plen);
 	if (!pbuf) {
 		*errptr = strdup("OOM");	// irony, but recoverable
 		goto out;
 	}
-	pgcodec__superblock__pack(db->superblock, pbuf);
+	pgcodec__superblock__pack(superblock, pbuf);
 
 	// open new temp file
 	int fd = open(tmp_fn, O_WRONLY | O_CREAT | O_EXCL, 0666);

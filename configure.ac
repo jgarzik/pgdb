@@ -22,8 +22,10 @@ AC_C_BIGENDIAN
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 AC_CHECK_LIB(crypto, SHA1_Update, CRYPTO_LIBS=-lcrypto, exit 1)
+AC_CHECK_LIB(uuid, uuid_generate_random, UUID_LIBS=-luuid, exit 1)
 
 AC_SUBST(CRYPTO_LIBS)
+AC_SUBST(UUID_LIBS)
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
