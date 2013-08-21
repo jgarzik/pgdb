@@ -1,0 +1,23 @@
+
+package PGcodec;
+
+message RootEnt {
+	required bytes key = 1;
+	required uint64 file_id = 2;
+}
+
+message RootIdx {
+	repeated RootEnt entries = 1;
+}
+
+message TableMeta {
+	required string name = 1;
+	required string uuid = 2;
+	required uint64 root_id = 3;
+}
+
+message Superblock {
+	required string uuid = 1;
+	repeated TableMeta tables = 5;
+}
+
