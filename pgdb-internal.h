@@ -72,6 +72,8 @@ struct pgdb_t {
 	const struct pgdb_options_t	*opt;
 	char				*pathname;
 
+	unsigned long			next_file_id;
+
 	PGcodec__Superblock		*superblock;
 	unsigned int			n_tables;
 	struct pgdb_table		tables[PGDB_MAX_TABLES];

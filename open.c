@@ -11,7 +11,9 @@
 #include <sys/uio.h>
 #include <fcntl.h>
 #include <assert.h>
+#include <dirent.h>
 #include <uuid/uuid.h>
+#include <ctype.h>
 
 #include "pgdb-internal.h"
 
@@ -120,6 +122,40 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 	return true;
 }
 
+struct id_scan_info {
+	unsigned long long	file_id;
+};
+
+static bool id_scan_iter(const struct dirent *de, void *priv, char **errptr)
+{
+	unsigned int i;
+
+	// only examine all-digit names
+	for (i = 0; i < strlen(de->d_name); i++)
+		if (!isdigit(de->d_name[i]))
+			return true;		// continue dir iteration
+
+	unsigned long long ll = strtoull(de->d_name, NULL, 10);
+
+	struct id_scan_info *isi = priv;
+	if (ll > isi->file_id)
+		isi->file_id = ll;
+
+	return true;		// continue dir iteration
+}
+
+static bool pg_scan_file_ids(pgdb_t *db, char **errptr)
+{
+	struct id_scan_info isi = { 0ULL };
+
+	if (!pg_iterate_dir(db->pathname, id_scan_iter, &isi, errptr))
+		return false;
+
+	db->next_file_id = isi.file_id + 1;
+	
+	return true;
+}
+
 static PGcodec__TableMeta *find_tablemeta(PGcodec__Superblock *sb,
 				      const char *tbl_name)
 {
@@ -211,6 +247,9 @@ pgdb_t* pgdb_open(
 		goto err_out;
 
 	if (!pg_read_superblock(db, errptr))
+		goto err_out;
+
+	if (!pg_scan_file_ids(db, errptr))
 		goto err_out;
 
 	int slot = pg_open_table(db, "master", errptr);
