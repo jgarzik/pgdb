@@ -54,3 +54,35 @@ out:
 	return rc;
 }
 
+bool pg_read_root(pgdb_t *db, PGcodec__RootIdx **root, unsigned int n,
+		  char **errptr)
+{
+	size_t fn_len = strlen(db->pathname) + strlen(PGDB_SB_FN) + 2;
+	char *fn = alloca(fn_len);
+	snprintf(fn, fn_len, "%s/%u", db->pathname, n);
+
+	struct pgdb_map *map = pgmap_open(fn, errptr);
+	if (!map)
+		return false;
+
+	if (!pg_verify_file(PGDB_ROOT_MAGIC, map->mem, map->st.st_size, errptr))
+		goto err_out;
+
+	struct pgdb_file_header *hdr = map->mem;
+
+	*root = pgcodec__root_idx__unpack(NULL,
+					  le32toh(hdr->len),
+					  map->mem + sizeof(*hdr));
+	if (!*root) {
+		*errptr = strdup("rootidx deser failed");
+		goto err_out;
+	}
+	
+	pgmap_free(map);
+	return true;
+
+err_out:
+	pgmap_free(map);
+	return false;
+}
+

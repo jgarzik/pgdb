@@ -10,14 +10,30 @@
 #include <endian.h>
 #include <sys/uio.h>
 #include <fcntl.h>
+#include <assert.h>
 #include <uuid/uuid.h>
 
 #include "pgdb-internal.h"
+
+static void pgdb_table_free(struct pgdb_table *table)
+{
+	free(table->name);
+	table->name = NULL;
+
+	if (table->root) {
+		pgcodec__root_idx__free_unpacked(table->root, NULL);
+		table->root = NULL;
+	}
+}
 
 static void __pgdb_free(pgdb_t *db)
 {
 	if (!db)
 		return;
+
+	unsigned int i;
+	for (i = 0; i < db->n_tables; i++)
+		pgdb_table_free(&db->tables[i]);
 
 	free(db->pathname);
 
@@ -104,6 +120,52 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 	return true;
 }
 
+static PGcodec__TableMeta *find_tablemeta(PGcodec__Superblock *sb,
+				      const char *tbl_name)
+{
+	unsigned int i;
+	for (i = 0; i < sb->n_tables; i++) {
+		PGcodec__TableMeta *tbl = sb->tables[i];
+		if (!strcmp(tbl_name, tbl->name))
+			return tbl;
+	}
+
+	return NULL;
+}
+
+static int pg_open_table(pgdb_t *db, const char *tbl_name, char **errptr)
+{
+	if (db->n_tables >= PGDB_MAX_TABLES) {
+		*errptr = strdup("table limit reached");
+		return -1;
+	}
+
+	struct pgdb_table *table = &db->tables[db->n_tables];
+	memset(table, 0, sizeof(*table));
+
+	PGcodec__TableMeta *tm = find_tablemeta(db->superblock, tbl_name);
+	if (!tm) {
+		*errptr = strdup("table not found");
+		return -1;
+	}
+
+	if (!pg_read_root(db, &table->root, tm->root_id, errptr))
+		return -1;
+	
+	table->root_id = tm->root_id;
+	table->name = strdup(tm->name);
+	if (!table->name) {
+		pgcodec__root_idx__free_unpacked(table->root, NULL);
+		memset(table, 0, sizeof(*table));
+		*errptr = strdup("OOM");	// irony, but recoverable
+		return -1;
+	}
+
+	int slot = db->n_tables;
+	db->n_tables++;
+	return slot;
+}
+
 pgdb_t* pgdb_open(
     const pgdb_options_t* options,
     const char* name,
@@ -150,6 +212,12 @@ pgdb_t* pgdb_open(
 
 	if (!pg_read_superblock(db, errptr))
 		goto err_out;
+
+	int slot = pg_open_table(db, "master", errptr);
+	if (slot < 0)
+		goto err_out;
+
+	assert(slot == 0);
 
 	return db;
 

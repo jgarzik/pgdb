@@ -12,6 +12,8 @@
 
 enum {
 	PGDB_TRAIL_SZ		= 32,		// sha256
+
+	PGDB_MAX_TABLES		= 1,
 };
 
 struct pgdb_file_header {
@@ -33,11 +35,19 @@ struct pgdb_map {
 	void			*mem;
 };
 
+struct pgdb_table {
+	char				*name;
+	uint64_t			root_id;
+	PGcodec__RootIdx		*root;
+};
+
 struct pgdb_t {
 	const struct pgdb_options_t	*opt;
 	char				*pathname;
 
 	PGcodec__Superblock		*superblock;
+	unsigned int			n_tables;
+	struct pgdb_table		tables[PGDB_MAX_TABLES];
 };
 
 extern void pgmap_free(struct pgdb_map *map);
@@ -45,6 +55,8 @@ extern struct pgdb_map *pgmap_open(const char *pathname, char **errptr);
 
 extern bool pg_write_root(pgdb_t *db, PGcodec__RootIdx *root, unsigned int n,
 		   char **errptr);
+extern bool pg_read_root(pgdb_t *db, PGcodec__RootIdx **root, unsigned int n,
+		  char **errptr);
 
 extern bool pg_have_superblock(const char *dirname);
 extern bool pg_write_superblock(pgdb_t *db, PGcodec__Superblock *sb,
