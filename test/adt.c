@@ -23,7 +23,7 @@ static void test_dstring(void)
 
 static void test_dlist(void)
 {
-	struct dlist *l = dlist_new(0);
+	struct dlist *l = dlist_new(0, free);
 	CHECK(l != NULL);
 	CHECK(l->len == 0);
 
@@ -41,7 +41,7 @@ static void test_dlist(void)
 	struct dbuffer *buf = dlist_buf(l, 1);
 	CHECK(!strcmp(buf->data, "two"));
 
-	dlist_free(l, free);
+	dlist_free(l);
 }
 
 int main (int argc, char *argv[])

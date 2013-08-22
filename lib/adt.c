@@ -90,22 +90,22 @@ bool dstr_append(struct dstring *dstr, void *s, size_t s_len)
 	return true;
 }
 
-void dlist_free(struct dlist *dl, void (*elem_destructor)(void *))
+void dlist_free(struct dlist *dl)
 {
 	if (!dl)
 		return;
 
-	if (elem_destructor) {
+	if (dl->elem_destructor) {
 		unsigned int i;
 		for (i = 0; i < dl->len; i++)
-			elem_destructor(dl->v[i].data);
+			dl->elem_destructor(dl->v[i].data);
 	}
 
 	free(dl->v);
 	free(dl);
 }
 
-struct dlist *dlist_new(size_t alloc_len)
+struct dlist *dlist_new(size_t alloc_len, void (*elem_destructor)(void *))
 {
 	if (alloc_len < 32)
 		alloc_len = 32;
@@ -121,6 +121,7 @@ struct dlist *dlist_new(size_t alloc_len)
 	}
 
 	dl->alloc_len = alloc_len;
+	dl->elem_destructor = elem_destructor;
 
 	return dl;
 }
