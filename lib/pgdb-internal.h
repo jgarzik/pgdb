@@ -109,8 +109,11 @@ extern bool pg_iterate_dir(const char *dirname,
 		 bool (*actor)(const struct dirent *de, void *priv,
 		 	       char **errptr),
 		 void *priv, char **errptr);
-extern bool pg_seed_libc_rng(void);
 extern bool pg_uuid(pg_uuid_t uuid);
 extern void pg_uuid_str(char *uuid, const pg_uuid_t uuid_in);
+
+// rand.c
+extern bool pg_rand_bytes(void *p, size_t len);
+extern bool pg_seed_libc_rng(void);
 
 #endif // __PGDB_INTERNAL_H__

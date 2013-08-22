@@ -133,44 +133,10 @@ bool pg_iterate_dir(const char *dirname,
 	return arc;
 }
 
-static bool rand_bytes(void *p, size_t len)
-{
-	int fd = open("/dev/urandom", O_RDONLY);
-	if (fd < 0)
-		return false;
-	
-	while (len > 0) {
-		ssize_t bread = read(fd, p, len);
-		if (bread < 0) {
-			close(fd);
-			return false;
-		}
-
-		p += bread;
-		len -= bread;
-	}
-
-	close(fd);
-
-	return true;
-}
-
-bool pg_seed_libc_rng(void)
-{
-	unsigned int v = 0;
-
-	if (!rand_bytes(&v, sizeof(v)))
-		return false;
-
-	srand(v);
-	
-	return true;
-}
-
 bool pg_uuid(pg_uuid_t uuid)
 {
 	unsigned char *s = uuid;
-	if (!rand_bytes(s, sizeof(pg_uuid_t)))
+	if (!pg_rand_bytes(s, sizeof(pg_uuid_t)))
 		return false;
 	
 	s[6] = 0x40 | (s[6] & 0xf);	// hi = 4

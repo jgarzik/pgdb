@@ -14,6 +14,7 @@ libpgdb_a_SOURCES = \
 	options.c	\
 	map.c		\
 	pagefile.c	\
+	rand.c		\
 	root.c		\
 	superblock.c	\
 	util.c		\
