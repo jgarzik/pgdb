@@ -26,7 +26,7 @@ extern struct dstring *dstr_new(const void *init_str, size_t init_len,
 			 size_t alloc_len_);
 extern bool dstr_append(struct dstring *dstr, void *s, size_t s_len);
 
-extern void dlist_free(struct dlist *dl, bool free_elements);
+extern void dlist_free(struct dlist *dl, void (*elem_destructor)(void *));
 extern struct dlist *dlist_new(size_t alloc_len);
 extern bool dlist_push(struct dlist *dl, void *data, size_t data_len);
 

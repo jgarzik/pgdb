@@ -90,15 +90,15 @@ bool dstr_append(struct dstring *dstr, void *s, size_t s_len)
 	return true;
 }
 
-void dlist_free(struct dlist *dl, bool free_elements)
+void dlist_free(struct dlist *dl, void (*elem_destructor)(void *))
 {
 	if (!dl)
 		return;
 
-	if (free_elements) {
+	if (elem_destructor) {
 		unsigned int i;
 		for (i = 0; i < dl->len; i++)
-			free(dl->v[i].data);
+			elem_destructor(dl->v[i].data);
 	}
 
 	free(dl->v);

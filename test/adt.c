@@ -41,7 +41,7 @@ static void test_dlist(void)
 	struct dbuffer *buf = dlist_buf(l, 1);
 	CHECK(!strcmp(buf->data, "two"));
 
-	dlist_free(l, true);
+	dlist_free(l, free);
 }
 
 int main (int argc, char *argv[])
