@@ -5,6 +5,8 @@
 
 #include "adt.h"
 
+#define unlikely(x)     __builtin_expect(!!(x), 0)
+
 void dstr_free(struct dstring *dstr)
 {
 	if (!dstr)
@@ -32,11 +34,11 @@ struct dstring *dstr_new(const void *init_str, size_t init_len,
 		alloc_len = alloc_len_;
 
 	struct dstring *dstr = malloc(sizeof(struct dstring));
-	if (!dstr)
+	if (unlikely(!dstr))
 		return NULL;
 
 	dstr->s = calloc(1, alloc_len);
-	if (!dstr->s) {
+	if (unlikely(!dstr->s)) {
 		free(dstr);
 		return NULL;
 	}
@@ -57,7 +59,7 @@ static bool dstr_grow(struct dstring *dstr, unsigned int target)
 	} while (new_alloc_len < target);
 
 	void *new_mem = calloc(1, new_alloc_len);
-	if (!new_mem)
+	if (unlikely(!new_mem))
 		return false;
 	
 	memcpy(new_mem, dstr->s, dstr->len);
@@ -107,11 +109,11 @@ struct dlist *dlist_new(size_t alloc_len)
 		alloc_len = 32;
 	
 	struct dlist *dl = calloc(1, sizeof(struct dlist));
-	if (!dl)
+	if (unlikely(!dl))
 		return NULL;
 	
 	dl->v = calloc(alloc_len, sizeof(struct dbuffer));
-	if (!dl->v) {
+	if (unlikely(!dl->v)) {
 		free(dl);
 		return NULL;
 	}
@@ -123,7 +125,7 @@ static bool dlist_grow(struct dlist *dl)
 {
 	unsigned int new_alloc_len = dl->alloc_len * 2;
 	void *new_mem = calloc(new_alloc_len, sizeof(struct dbuffer));
-	if (!new_mem)
+	if (unlikely(!new_mem))
 		return false;
 
 	memcpy(new_mem, dl->v, dl->len * sizeof(struct dbuffer));
