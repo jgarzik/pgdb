@@ -138,7 +138,7 @@ static bool dlist_grow(struct dlist *dl)
 	return true;
 }
 
-bool dlist_append(struct dlist *dl, void *data, size_t data_len)
+bool dlist_push(struct dlist *dl, void *data, size_t data_len)
 {
 	if ((dl->len == dl->alloc_len) &&
 	    !dlist_grow(dl))

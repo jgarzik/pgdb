@@ -28,7 +28,7 @@ extern bool dstr_append(struct dstring *dstr, void *s, size_t s_len);
 
 extern void dlist_free(struct dlist *dl, bool free_elements);
 extern struct dlist *dlist_new(size_t alloc_len);
-extern bool dlist_append(struct dlist *dl, void *data, size_t data_len);
+extern bool dlist_push(struct dlist *dl, void *data, size_t data_len);
 
 static inline void *dlist_get(struct dlist *dl, unsigned int index,
 			      size_t *vallen)
