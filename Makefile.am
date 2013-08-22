@@ -4,6 +4,7 @@ EXTRA_DIST = PGcodec.proto
 lib_LIBRARIES = libpgdb.a
 
 libpgdb_a_SOURCES = \
+	adt.h adt.c	\
 	pgdb.h		\
 	pgdb-internal.h \
 	destroy.c	\
