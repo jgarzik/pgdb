@@ -2,7 +2,7 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(pgdb, 0.1git, [http://sourceforge.net/projects/XXXXXXXXX0 ..])
 AC_PREREQ(2.52)
-AC_CONFIG_SRCDIR([pgdb.h])
+AC_CONFIG_SRCDIR([lib/open.c])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([gnu])
 AC_CONFIG_HEADERS([pgdb-config.h])
@@ -27,6 +27,7 @@ AC_CHECK_LIB(uuid, uuid_generate_random, UUID_LIBS=-luuid, exit 1)
 AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(UUID_LIBS)
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+		lib/Makefile])
 AC_OUTPUT
 
