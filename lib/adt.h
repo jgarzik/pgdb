@@ -42,7 +42,7 @@ static inline void *dlist_get(struct dlist *dl, unsigned int index,
 	return dl->v[index].data;
 }
 
-static inline struct dbuffer *dlist_getbuf(struct dlist *dl, unsigned int index)
+static inline struct dbuffer *dlist_buf(struct dlist *dl, unsigned int index)
 {
 	if (index >= dl->len)
 		return NULL;

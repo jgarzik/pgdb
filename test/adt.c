@@ -38,8 +38,8 @@ static void test_dlist(void)
 	s = dlist_get(l, 0, NULL);
 	CHECK(!strcmp(s, "one"));
 
-	s = dlist_get(l, 1, NULL);
-	CHECK(!strcmp(s, "two"));
+	struct dbuffer *buf = dlist_buf(l, 1);
+	CHECK(!strcmp(buf->data, "two"));
 
 	dlist_free(l, true);
 }
