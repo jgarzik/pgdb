@@ -10,15 +10,16 @@ libpgdb_a_SOURCES = \
 	pgdb-internal.h \
 	destroy.c	\
 	get.c		\
+	map.c		\
 	open.c		\
 	options.c	\
-	map.c		\
 	pagefile.c	\
 	rand.c		\
 	root.c		\
-	superblock.c	\
-	util.c		\
 	PGcodec.pb-c.h	\
 	PGcodec.pb-c.c	\
-	skeleton.c
+	skeleton.c	\
+	superblock.c	\
+	util.c		\
+	uuid.c
 
