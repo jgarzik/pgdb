@@ -19,6 +19,8 @@ enum {
 	PGDB_MAX_TABLES		= 1,
 };
 
+typedef unsigned char pg_uuid_t[16];
+
 struct pgdb_file_header {
 	unsigned char		magic[8];
 	uint32_t		len;
@@ -107,5 +109,8 @@ extern bool pg_iterate_dir(const char *dirname,
 		 bool (*actor)(const struct dirent *de, void *priv,
 		 	       char **errptr),
 		 void *priv, char **errptr);
+extern bool pg_seed_libc_rng(void);
+extern bool pg_uuid(pg_uuid_t uuid);
+extern void pg_uuid_str(char *uuid, const pg_uuid_t uuid_in);
 
 #endif // __PGDB_INTERNAL_H__

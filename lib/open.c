@@ -12,7 +12,6 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <dirent.h>
-#include <uuid/uuid.h>
 #include <ctype.h>
 
 #include "pgdb-internal.h"
@@ -81,10 +80,10 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 	PGcodec__RootIdx root = PGCODEC__ROOT_IDX__INIT;
 
 	// generate master table UUID
-	uuid_t tab_uuid;
+	pg_uuid_t tab_uuid;
 	char tab_uuid_s[128];
-	uuid_generate_random(tab_uuid);
-	uuid_unparse(tab_uuid, tab_uuid_s);
+	pg_uuid(tab_uuid);
+	pg_uuid_str(tab_uuid_s, tab_uuid);
 
 	// generate initial master table
 	PGcodec__TableMeta table;
@@ -94,10 +93,10 @@ static bool pg_create_db(pgdb_t *db, char **errptr)
 	PGcodec__TableMeta *tables[1] = { &table };
 
 	// generate root superblock UUID
-	uuid_t sb_uuid;
+	pg_uuid_t sb_uuid;
 	char sb_uuid_s[128];
-	uuid_generate_random(sb_uuid);
-	uuid_unparse(sb_uuid, sb_uuid_s);
+	pg_uuid(sb_uuid);
+	pg_uuid_str(sb_uuid_s, sb_uuid);
 
 	// generate initial superblock
 	PGcodec__Superblock sb = PGCODEC__SUPERBLOCK__INIT;
