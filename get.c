@@ -3,21 +3,6 @@
 
 #include "pgdb-internal.h"
 
-static int find_rootent(PGcodec__RootIdx *root, const void *key, size_t klen)
-{
-	unsigned int i;
-
-	for (i = 0; i < root->n_entries; i++) {
-		PGcodec__RootEnt *ent = root->entries[i];
-		unsigned int len = (klen < ent->key.len) ? klen : ent->key.len;
-		int cmp = memcmp(key, ent->key.data, len);
-		if (cmp <= 0)
-			return i;
-	}
-
-	return -1;
-}
-
 static char* __pgdb_get(
     pgdb_t* db, unsigned int table_slot,
     const pgdb_readoptions_t* options,
@@ -29,7 +14,7 @@ static char* __pgdb_get(
 
 	struct pgdb_table *table = &db->tables[table_slot];
 
-	int root_idx = find_rootent(table->root, key, keylen);
+	int root_idx = pg_find_rootent(table->root, key, keylen);
 	if (root_idx < 0)
 		return NULL;
 

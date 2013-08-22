@@ -86,3 +86,18 @@ err_out:
 	return false;
 }
 
+int pg_find_rootent(PGcodec__RootIdx *root, const void *key, size_t klen)
+{
+	unsigned int i;
+
+	for (i = 0; i < root->n_entries; i++) {
+		PGcodec__RootEnt *ent = root->entries[i];
+		unsigned int len = (klen < ent->key.len) ? klen : ent->key.len;
+		int cmp = memcmp(key, ent->key.data, len);
+		if (cmp <= 0)
+			return i;
+	}
+
+	return -1;
+}
+

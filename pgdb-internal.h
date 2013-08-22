@@ -86,6 +86,7 @@ extern bool pg_write_root(pgdb_t *db, PGcodec__RootIdx *root, unsigned int n,
 		   char **errptr);
 extern bool pg_read_root(pgdb_t *db, PGcodec__RootIdx **root, unsigned int n,
 		  char **errptr);
+extern int pg_find_rootent(PGcodec__RootIdx *root, const void *key, size_t klen);
 
 extern void pg_pagefile_close(struct pgdb_pagefile *pf);
 extern struct pgdb_pagefile *pg_pagefile_open(pgdb_t *db, unsigned int n,
