@@ -11,8 +11,6 @@ void dstr_free(struct dstring *dstr)
 		return;
 	
 	free(dstr->s);
-
-	memset(dstr, 0, sizeof(*dstr));
 	free(dstr);
 }
 
@@ -100,8 +98,6 @@ void dlist_free(struct dlist *dl, bool free_elements)
 	}
 
 	free(dl->v);
-	
-	memset(dl, 0, sizeof(*dl));
 	free(dl);
 }
 
