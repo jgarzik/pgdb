@@ -28,6 +28,7 @@ AC_SUBST(CRYPTO_LIBS)
 AC_SUBST(UUID_LIBS)
 
 AC_CONFIG_FILES([Makefile
-		lib/Makefile])
+		lib/Makefile
+		test/Makefile])
 AC_OUTPUT
 

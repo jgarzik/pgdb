@@ -22,8 +22,8 @@ struct dstring *dstr_new(const void *init_str, size_t init_len,
 	size_t is_len, alloc_len;
 
 	if (init_str) {
-		is_len = init_len ? init_len : strlen(init_str) + 1;
-		alloc_len = is_len;
+		is_len = init_len ? init_len : strlen(init_str);
+		alloc_len = is_len + 1;
 	} else {
 		is_len = 0;
 		alloc_len = 0;
@@ -43,8 +43,10 @@ struct dstring *dstr_new(const void *init_str, size_t init_len,
 		return NULL;
 	}
 
-	if (init_str)
+	if (init_str) {
 		memcpy(dstr->s, init_str, is_len);
+		dstr->len = is_len;
+	}
 
 	dstr->alloc_len = alloc_len;
 
@@ -117,6 +119,8 @@ struct dlist *dlist_new(size_t alloc_len)
 		free(dl);
 		return NULL;
 	}
+
+	dl->alloc_len = alloc_len;
 
 	return dl;
 }
