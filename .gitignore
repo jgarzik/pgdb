@@ -12,6 +12,8 @@ config.log
 config.sub
 config.status
 missing
+compile
+test-driver
 stamp-h1
 install-sh
 pgdb-config.h*
